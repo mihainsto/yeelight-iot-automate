@@ -80,6 +80,7 @@ def update():
 
 
 log("Execution started")
+print("Execution started")
 while True:
     update()
     time.sleep(240)
