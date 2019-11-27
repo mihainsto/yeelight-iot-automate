@@ -38,18 +38,19 @@ class Network_connected_thing:
 class yeeligh_strip:
     def __init__(self, yeelight_strip_address):
         self.__ip__ = yeelight_strip_address
-        self.__status__ = False
-        self.strip = Bulb(self.__ip__)
+        self.__status__ = True
     def get_status(self):
         return self.__status__
     def turn_on(self):
         self.__status__ = True
         log("Turned on Yeelight")
-        self.strip.turn_on()
+        strip = Bulb(self.__ip__)
+        strip.turn_on()
     def turn_off(self):
         self.__status__ = False
         log("Turned off Yeelight")
-        self.strip.turn_off()
+        strip = Bulb(self.__ip__)
+        strip.turn_off()
 
 my_phone = Network_connected_thing(phone_address)
 my_pc = Network_connected_thing(pc_address)
@@ -72,6 +73,7 @@ def update():
             my_yeelight.turn_on()
 
     elif my_yeelight.get_status() is True and (curentTime[0] > 20 + GTM_CONSTANT  or curentTime[0] < 6 + GTM_CONSTANT):
+        log("Checking PC for status")
         if my_pc.status() is False:
             my_yeelight.turn_off()
 
