@@ -1,21 +1,20 @@
 import subprocess
-#from yeelight import Bulb
+from yeelight import Bulb
 import time
 import datetime
 import json
 import sunset
 from sunset import sun
-from datetime import date, time, timedelta
+from datetime import date, timedelta
 
-GTM_CONSTANT = 2    # +2h
+GTM_CONSTANT = 0    # +2h
 yeelight_strip_address = "192.168.1.104"
 pc_address = "192.168.1.225"
 phone_address = "192.168.1.125"
-#strip = Bulb(yeelight_strip_address)
 
 def log(msg):
     with open('log.txt','a') as f:
-        f.write(msg)
+        f.write(str(datetime.datetime.now())+'::'+msg)
         f.write('\n')
 
 class Network_connected_thing:
@@ -34,28 +33,26 @@ class Network_connected_thing:
             return False
         else:
             return False
+
 class yeeligh_strip:
-    def __init__(self, yeelight_strip_address, status):
+    def __init__(self, yeelight_strip_address):
         self.__ip__ = yeelight_strip_address
-        self.__status__ = status
+        self.__status__ = False
+        self.strip = Bulb(self.__ip__)
     def get_status(self):
         return self.__status__
     def turn_on(self):
         self.__status__ = True
-        log("Turned on Yeelight  -" + str(datetime.datetime.now()))
-        pass
+        log("Turned on Yeelight")
+        self.strip.turn_on()
     def turn_off(self):
         self.__status__ = False
-        log("Turned off Yeelight  -" + str(datetime.datetime.now()))
-        pass
+        log("Turned off Yeelight")
+        self.strip.turn_off()
 
 my_phone = Network_connected_thing(phone_address)
 my_pc = Network_connected_thing(pc_address)
-my_yeelight = yeeligh_strip(yeelight_strip_address,True)
-def work():
-    while True:
-        time.sleep(30)
-        print(my_phone.status())
+my_yeelight = yeeligh_strip(yeelight_strip_address)
 
 def get_sunset():
     s = sun(lat=44.43, long=26.09)
@@ -67,13 +64,18 @@ def get_sunset():
 def update():
     curentTime = [datetime.datetime.now().hour, datetime.datetime.now().minute]
     sunsetTime = get_sunset()
-
-    if curentTime[0] > sunsetTime[0] and curentTime[0] < 22 and my_yeelight.get_status() is False:
+    print(curentTime)
+    print(sunsetTime)
+    if curentTime[0] > sunsetTime[0] and curentTime[0] < 20 + GTM_CONSTANT  and my_yeelight.get_status() is False:
+        log("Checking phone for status")
         if my_phone.status() is True:
             my_yeelight.turn_on()
 
-    elif my_yeelight.get_status() is True and (curentTime[0] > 22 or curentTime[0] < 8):
-        if my_pc.status() == False:
+    elif my_yeelight.get_status() is True and (curentTime[0] > 20 + GTM_CONSTANT  or curentTime[0] < 6 + GTM_CONSTANT):
+        if my_pc.status() is False:
             my_yeelight.turn_off()
 
-update()
+
+while True:
+    time.sleep(240)
+    update()
