@@ -11,6 +11,7 @@ GTM_CONSTANT = 0    # +2h
 yeelight_strip_address = "192.168.1.104"
 pc_address = "192.168.1.225"
 phone_address = "192.168.1.125"
+#strip = Bulb(yeelight_strip_address)
 
 def log(msg):
     with open('log.txt','a') as f:
@@ -64,9 +65,8 @@ def get_sunset():
 def update():
     curentTime = [datetime.datetime.now().hour, datetime.datetime.now().minute]
     sunsetTime = get_sunset()
-    print(curentTime)
-    print(sunsetTime)
-    if curentTime[0] > sunsetTime[0] and curentTime[0] < 20 + GTM_CONSTANT  and my_yeelight.get_status() is False:
+    log("Checking Time")
+    if (curentTime[0] > sunsetTime[0] or (curentTime[0] == sunsetTime[0] and curentTime[1] >= sunsetTime[0])) and curentTime[0] < 20 + GTM_CONSTANT  and my_yeelight.get_status() is False:
         log("Checking phone for status")
         if my_phone.status() is True:
             my_yeelight.turn_on()
@@ -76,6 +76,8 @@ def update():
             my_yeelight.turn_off()
 
 
+
+log("Execution started")
 while True:
-    time.sleep(240)
     update()
+    time.sleep(240)
