@@ -38,7 +38,7 @@ class Network_connected_thing:
 class yeeligh_strip:
     def __init__(self, yeelight_strip_address):
         self.__ip__ = yeelight_strip_address
-        self.__status__ = True
+        self.__status__ = False
     def get_status(self):
         return self.__status__
     def turn_on(self):
@@ -67,7 +67,7 @@ def update():
     curentTime = [datetime.datetime.now().hour, datetime.datetime.now().minute]
     sunsetTime = get_sunset()
     log("Checking Time")
-    if (curentTime[0] > sunsetTime[0] or (curentTime[0] == sunsetTime[0] and curentTime[1] >= sunsetTime[0])) and curentTime[0] < 20 + GTM_CONSTANT  and my_yeelight.get_status() is False:
+    if (curentTime[0] > sunsetTime[0] or (curentTime[0] == sunsetTime[0] and curentTime[1] >= sunsetTime[1])) and curentTime[0] < 20 + GTM_CONSTANT  and my_yeelight.get_status() is False:
         log("Checking phone for status")
         if my_phone.status() is True:
             my_yeelight.turn_on()
