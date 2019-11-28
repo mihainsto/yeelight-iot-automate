@@ -72,7 +72,7 @@ def update():
         if my_phone.status() is True:
             my_yeelight.turn_on()
 
-    elif my_yeelight.get_status() is True and (curentTime[0] > 20 + GTM_CONSTANT  or curentTime[0] < 6 + GTM_CONSTANT):
+    elif my_yeelight.get_status() is True and (curentTime[0] >= 20 + GTM_CONSTANT  or curentTime[0] < 6 + GTM_CONSTANT):
         log("Checking PC for status")
         if my_pc.status() is False:
             my_yeelight.turn_off()
