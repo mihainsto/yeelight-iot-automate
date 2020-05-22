@@ -7,7 +7,8 @@ import sunset
 from sunset import sun
 from datetime import date, timedelta
 
-GTM_CONSTANT = 0    # +2h
+#GTM_CONSTANT = 0    # Because we have winter time in RO
+GTM_CONSTAT = 1 # Because we have summer time in RO
 yeelight_strip_address = "192.168.1.104"
 pc_address = "192.168.1.225"
 phone_address = "192.168.1.125"
